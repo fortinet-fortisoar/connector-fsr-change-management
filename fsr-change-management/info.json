@@ -21,6 +21,17 @@
         "required": true,
         "tooltip": "Certificate .json file used to connect to the development or staging server",
         "description": "Certificate .json file used to connect to the development or staging server"
+      },
+      {
+        "title": "Verify SSL",
+        "name": "verify_ssl",
+        "type": "checkbox",
+        "description": "Specifies whether the SSL certificate for the server is to be verified or not.",
+        "tooltip": "Specifies whether the SSL certificate for the server is to be verified or not.",
+        "required": false,
+        "editable": true,
+        "visible": true,
+        "value": false
       }
     ]
   },
@@ -28,7 +39,7 @@
     {
       "operation": "sync_change_request",
       "title": "Sync Change Request",
-      "description": "",
+      "description": "Synchronize the Change Request record within FortiSOAR servers",
       "category": "investigation",
       "annotation": "sync_change_request",
       "enabled": true,

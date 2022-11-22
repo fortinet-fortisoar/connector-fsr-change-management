@@ -76,7 +76,7 @@ def sync_change_request(config, params, *args, **kwargs):
         data = json.dumps(payload)
         auth_header = __get_headers(full_url, data, private_key, public_key)
         headers = {'Authorization': auth_header}
-        response = requests.request(method, full_url, headers=headers, data=data, verify=False)
+        response = requests.request(method, full_url, headers=headers, data=data, verify=config.get('verify_ssl'))
         return response.json()
     except Exception as Err:
         logger.exception(Err)

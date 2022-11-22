@@ -18,7 +18,7 @@ class ChnageManagement(Connector):
             operation = operations.get(operation)
             return operation(config, params, *args, **kwargs)
         except Exception as err:
-            logger.error('{}'.format(err))
+            logger.exception('{}'.format(err))
             raise ConnectorError('{}'.format(err))
 
     def check_health(self, config, *args, **kwargs):
