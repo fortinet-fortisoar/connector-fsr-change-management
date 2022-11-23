@@ -1,0 +1,505 @@
+{
+  "type": "workflow_collections",
+  "data": [
+    {
+      "@type": "WorkflowCollection",
+      "name": "Sample - FortiSOAR Change Management - 1.0.0",
+      "description": "Sample playbooks for \"FortiSOAR Change Management\" connector. If you are planning to use any of the sample playbooks in your environment, ensure that you clone those playbooks and move them to a different collection, since the sample playbook collection gets deleted during connector upgrade and delete.",
+      "visible": true,
+      "image": null,
+      "uuid": "fb731c20-f348-486d-85d4-cbdbdba8bd3d",
+      "id": 45,
+      "deletedAt": null,
+      "importedBy": [],
+      "recordTags": [
+        "fsr-change-management"
+      ],
+      "workflows": [
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Sync Production (Created) Change Request",
+          "aliasName": null,
+          "tag": "#FortiSOAR Change Management",
+          "description": "Synchronise the created change request with development or staging environment",
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1668589365,
+          "collection": "/api/3/workflow_collections/fb731c20-f348-486d-85d4-cbdbdba8bd3d",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/e3482d9a-9e95-4731-8191-176ba7f81309",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get FSR Change Management Connector Config ID",
+              "description": null,
+              "arguments": {
+                "arguments": [],
+                "apply_async": false,
+                "step_variables": [],
+                "pass_input_record": false,
+                "workflowReference": "/api/3/workflows/dc64ea0b-bc5b-49db-8721-c6527d22cc6e"
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "02778159-350d-419e-ad6c-1ef0bac56db3"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Sync Created Change Request",
+              "description": null,
+              "arguments": {
+                "name": "FortiSOAR Change Management",
+                "config": "{{vars.item}}",
+                "params": {
+                  "cr_payload": "{{vars.refine_cr_record}}"
+                },
+                "version": "1.0.0",
+                "for_each": {
+                  "item": "{{vars.steps.Get_FSR_Change_Management_Connector_Config_ID.config_id}}",
+                  "parallel": false,
+                  "condition": ""
+                },
+                "connector": "fsr-change-management",
+                "operation": "sync_change_request",
+                "operationTitle": "Sync Change Request",
+                "step_variables": []
+              },
+              "status": null,
+              "top": "435",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "09f2d99d-4dec-4857-a2f2-06f75541ec0d"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Refine Change Request Record",
+              "description": null,
+              "arguments": {
+                "_tmp": "{% for k, v in vars.input.records[0].items() %}\n{% if k not in ['@id'] %}\n{% set _ = vars.refine_cr_record.update({k: v}) %}\n{% endif %}\n{% endfor %}"
+              },
+              "status": null,
+              "top": "300",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "863b2ce9-2dce-4cbb-8e69-c4f52f65f5d6"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "resource": "change_requests",
+                "resources": [
+                  "change_requests"
+                ],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": [
+                      "{{vars.input.records[0]}}"
+                    ]
+                  },
+                  "refine_cr_record": "{}"
+                },
+                "fieldbasedtrigger": {
+                  "sort": [],
+                  "limit": 30,
+                  "logic": "AND",
+                  "filters": []
+                }
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/ea155646-3821-4542-9702-b246da430a8d",
+              "group": null,
+              "uuid": "e3482d9a-9e95-4731-8191-176ba7f81309"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get FSR Change Management Connector Config ID",
+              "targetStep": "/api/3/workflow_steps/02778159-350d-419e-ad6c-1ef0bac56db3",
+              "sourceStep": "/api/3/workflow_steps/e3482d9a-9e95-4731-8191-176ba7f81309",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "f0eeca02-5abf-434b-bab6-0d34b8f309a3"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Refine Change Request Record -> Sync Created Change Request",
+              "targetStep": "/api/3/workflow_steps/09f2d99d-4dec-4857-a2f2-06f75541ec0d",
+              "sourceStep": "/api/3/workflow_steps/863b2ce9-2dce-4cbb-8e69-c4f52f65f5d6",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "f4e129e9-668c-403e-b4d4-a9cd2f1a97eb"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get FSR Change Management Connector Config ID -> Refine Change Request Record",
+              "targetStep": "/api/3/workflow_steps/863b2ce9-2dce-4cbb-8e69-c4f52f65f5d6",
+              "sourceStep": "/api/3/workflow_steps/02778159-350d-419e-ad6c-1ef0bac56db3",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "f8dd4eaa-9ac3-4cfa-830a-bb112994b3fe"
+            }
+          ],
+          "groups": [],
+          "priority": null,
+          "uuid": "101d7c67-602a-4c67-b6c6-51ebeb73f8e0",
+          "id": 630,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "fsr-change-management",
+            "OnCreate"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Sync Production (Updated) Change Request",
+          "aliasName": null,
+          "tag": "#FortiSOAR Change Management",
+          "description": "Synchronise the updated change request with development or staging environment",
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1668590920,
+          "collection": "/api/3/workflow_collections/fb731c20-f348-486d-85d4-cbdbdba8bd3d",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/d982bd79-797e-4afa-9198-0feac7f68274",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Refine Change Request Record",
+              "description": null,
+              "arguments": {
+                "_tmp": "{% for k, v in vars.input.records[0].items() %}\n{% if k not in ['@id'] %}\n{% set _ = vars.refine_cr_record.update({k: v}) %}\n{% endif %}\n{% endfor %}"
+              },
+              "status": null,
+              "top": "300",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "8bb6b74a-1f79-45fd-a1e6-5da6f8bbf1a7"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get FSR Change Management Connector Config ID",
+              "description": null,
+              "arguments": {
+                "arguments": [],
+                "apply_async": false,
+                "step_variables": [],
+                "pass_input_record": false,
+                "workflowReference": "/api/3/workflows/dc64ea0b-bc5b-49db-8721-c6527d22cc6e"
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "ac5d1416-59ed-4caa-b75e-e4e0871f6b8e"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "resource": "change_requests",
+                "resources": [
+                  "change_requests"
+                ],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": [
+                      "{{vars.input.records[0]}}"
+                    ]
+                  },
+                  "refine_cr_record": "{}"
+                },
+                "fieldbasedtrigger": {
+                  "sort": [],
+                  "limit": 30,
+                  "logic": "AND",
+                  "filters": []
+                }
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/9300bf69-5063-486d-b3a6-47eb9da24872",
+              "group": null,
+              "uuid": "d982bd79-797e-4afa-9198-0feac7f68274"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Sync Updated Change Request",
+              "description": null,
+              "arguments": {
+                "name": "FortiSOAR Change Management",
+                "config": "{{vars.item}}",
+                "params": {
+                  "cr_payload": "{{vars.refine_cr_record}}"
+                },
+                "version": "1.0.0",
+                "for_each": {
+                  "item": "{{vars.steps.Get_FSR_Change_Management_Connector_Config_ID.config_id}}",
+                  "parallel": false,
+                  "condition": ""
+                },
+                "connector": "fsr-change-management",
+                "operation": "sync_change_request",
+                "operationTitle": "Sync Change Request",
+                "step_variables": []
+              },
+              "status": null,
+              "top": "435",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "dcb9ee80-67fd-45ba-a4d8-65286bc10d27"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get FSR Change Management Connector Config ID",
+              "targetStep": "/api/3/workflow_steps/ac5d1416-59ed-4caa-b75e-e4e0871f6b8e",
+              "sourceStep": "/api/3/workflow_steps/d982bd79-797e-4afa-9198-0feac7f68274",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "079276e9-a6a2-4fdc-8ad1-8fb065341e5f"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get FSR Change Management Connector Config ID -> Refine Change Request Record",
+              "targetStep": "/api/3/workflow_steps/8bb6b74a-1f79-45fd-a1e6-5da6f8bbf1a7",
+              "sourceStep": "/api/3/workflow_steps/ac5d1416-59ed-4caa-b75e-e4e0871f6b8e",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "085dec3b-b653-4ce9-8f25-893a446a22f1"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Refine Change Request Record -> Sync Created Change Request",
+              "targetStep": "/api/3/workflow_steps/dcb9ee80-67fd-45ba-a4d8-65286bc10d27",
+              "sourceStep": "/api/3/workflow_steps/8bb6b74a-1f79-45fd-a1e6-5da6f8bbf1a7",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "f19501a6-9354-4157-9c75-873f7285e7d1"
+            }
+          ],
+          "groups": [],
+          "priority": null,
+          "uuid": "bb1b9686-b8e4-4bc7-9f05-e5d10e38cc11",
+          "id": 631,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "fsr-change-management",
+            "OnUpdate"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get Change Management Connector Configuration",
+          "aliasName": null,
+          "tag": null,
+          "description": "Get the Change Management Connector Configuration details",
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1668579835,
+          "collection": "/api/3/workflow_collections/fb731c20-f348-486d-85d4-cbdbdba8bd3d",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/548f5ebe-27fe-4eee-84d9-30b2e22f87ad",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Health Available Connector Details",
+              "description": null,
+              "arguments": {
+                "config_id": "{{vars.steps.Check_Health_Status | json_query(\"[? data.status == 'Available'].data.config_id\")}}"
+              },
+              "status": null,
+              "top": "570",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "038a0802-ca35-4322-8663-998343df7200"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Check Health Status",
+              "description": null,
+              "arguments": {
+                "params": {
+                  "iri": "/api/integration/connectors/healthcheck/fsr-change-management/1.0.0/?config={{vars.item.config_id}}",
+                  "body": "",
+                  "method": "GET"
+                },
+                "version": "3.2.2",
+                "for_each": {
+                  "item": "{{vars.fsr_cm[0].configuration}}",
+                  "parallel": false,
+                  "condition": ""
+                },
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": {
+                  "IdToName": "{% set data = dict() %}{% for item in vars.connector.configuration %}{% set _ = data.update({item.config_id : item.name}) %}{% endfor %}{{data}}",
+                  "connectorInfo": "{{ vars.result | json_query(\"[*][data][]\") }}"
+                }
+              },
+              "status": null,
+              "top": "435",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+              "group": null,
+              "uuid": "17c2d171-92ae-40b5-b655-415ff6ddca11"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "548f5ebe-27fe-4eee-84d9-30b2e22f87ad"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Installed Connector List With Configured",
+              "description": null,
+              "arguments": {
+                "params": {
+                  "iri": "/api/integration/connector_details/?configured=true",
+                  "body": "",
+                  "method": "POST"
+                },
+                "version": "3.2.2",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": {
+                  "installedConnectorList": "{{vars.result.data['data']}}"
+                }
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+              "group": null,
+              "uuid": "a0655bf9-8209-44c9-81ef-54916cc1ccee"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get FSR Change Management Details",
+              "description": null,
+              "arguments": {
+                "fsr_cm": "{{vars.steps.Get_Installed_Connector_List_With_Configured.data.data | json_query(\"[?name=='fsr-change-management']\")}}"
+              },
+              "status": null,
+              "top": "300",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "c4e5efcc-31d0-4de4-8956-6d4c011400a9"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configuration -> Check Health Status",
+              "targetStep": "/api/3/workflow_steps/17c2d171-92ae-40b5-b655-415ff6ddca11",
+              "sourceStep": "/api/3/workflow_steps/c4e5efcc-31d0-4de4-8956-6d4c011400a9",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "2e777230-6719-4c8d-91c1-7d15d5cac7f3"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Check Health Status -> Get Health Available Connector Details",
+              "targetStep": "/api/3/workflow_steps/038a0802-ca35-4322-8663-998343df7200",
+              "sourceStep": "/api/3/workflow_steps/17c2d171-92ae-40b5-b655-415ff6ddca11",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "3eb1cc34-6825-4be9-936f-4f743ccd4403"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Installed Connector List With Configured -> Configuration",
+              "targetStep": "/api/3/workflow_steps/c4e5efcc-31d0-4de4-8956-6d4c011400a9",
+              "sourceStep": "/api/3/workflow_steps/a0655bf9-8209-44c9-81ef-54916cc1ccee",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "43895639-519d-4398-92ab-35083bd4d78d"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Installed Connector List With Configured",
+              "targetStep": "/api/3/workflow_steps/a0655bf9-8209-44c9-81ef-54916cc1ccee",
+              "sourceStep": "/api/3/workflow_steps/548f5ebe-27fe-4eee-84d9-30b2e22f87ad",
+              "label": null,
+              "isExecuted": false,
+              "uuid": "aa00ff67-117a-4039-9d58-347010a4c441"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "dc64ea0b-bc5b-49db-8721-c6527d22cc6e",
+          "id": 632,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "Subroutine",
+            "fsr-change-management"
+          ]
+        }
+      ]
+    }
+  ],
+  "exported_tags": [
+    "fsr-change-management",
+    "OnCreate",
+    "OnUpdate",
+    "Subroutine"
+  ]
+}

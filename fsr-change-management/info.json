@@ -1,0 +1,63 @@
+{
+  "name": "fsr-change-management",
+  "label": "FortiSOAR Change Management",
+  "version": "1.0.0",
+  "description": "Synchronize the FortiSOAR Change Request record from one FortiSOAR instance to another",
+  "publisher": "Fortinet",
+  "cs_approved": true,
+  "cs_compatible": true,
+  "category": "Change Management",
+  "icon_small_name": "small.png",
+  "icon_large_name": "large.png",
+  "help_online": "",
+  "configuration": {
+    "fields": [
+      {
+        "title": "Certificate File",
+        "name": "cert_file",
+        "type": "file",
+        "visible": true,
+        "editable": true,
+        "required": true,
+        "tooltip": "Certificate .json file used to connect to the development or staging server",
+        "description": "Certificate .json file used to connect to the development or staging server"
+      },
+      {
+        "title": "Verify SSL",
+        "name": "verify_ssl",
+        "type": "checkbox",
+        "description": "Specifies whether the SSL certificate for the server is to be verified or not.",
+        "tooltip": "Specifies whether the SSL certificate for the server is to be verified or not.",
+        "required": false,
+        "editable": true,
+        "visible": true,
+        "value": false
+      }
+    ]
+  },
+  "operations": [
+    {
+      "operation": "sync_change_request",
+      "title": "Sync Change Request",
+      "description": "Synchronize the Change Request record within FortiSOAR servers",
+      "category": "investigation",
+      "annotation": "sync_change_request",
+      "enabled": true,
+      "output_schema": {
+        "task_id": ""
+      },
+      "parameters": [
+        {
+          "title": "Change Request Payload",
+          "type": "text",
+          "name": "cr_payload",
+          "description": "Specify the Change Request record payload which you want to sync with development server or staging server",
+          "tooltip": "Specify the Change Request record payload which you want to sync with development server or staging server",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ]
+    }
+  ]
+}
